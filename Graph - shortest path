@@ -1,0 +1,56 @@
+#include <stdio.h>
+#define INF 9999
+#define V 6   // number of vertices
+
+void dijkstra(int graph[V][V], int start) {
+    int distance[V], visited[V];
+    int i, j, count, minDist, nextNode;
+
+    // Initialize distances
+    for(i = 0; i < V; i++) {
+        distance[i] = graph[start][i];
+        visited[i] = 0;
+    }
+
+    distance[start] = 0;
+    visited[start] = 1;
+
+    for(count = 1; count < V - 1; count++) {
+        minDist = INF;
+
+        // Find nearest unvisited vertex
+        for(i = 0; i < V; i++) {
+            if(distance[i] < minDist && !visited[i]) {
+                minDist = distance[i];
+                nextNode = i;
+            }
+        }
+
+        visited[nextNode] = 1;
+
+        // Update distances
+        for(i = 0; i < V; i++) {
+            if(!visited[i] && minDist + graph[nextNode][i] < distance[i]) {
+                distance[i] = minDist + graph[nextNode][i];
+            }
+        }
+    }
+
+    // Print shortest distances
+    printf("Shortest distances from node %d:\n", start);
+    for(i = 0; i < V; i++) {
+        printf("To %d: %d\n", i, distance[i]);
+    }
+}
+
+int main() {
+    int graph[V][V] = {
+        {0, 4, INF, INF, INF, INF},
+        {4, 0, 2, INF, INF, INF},
+        {INF, 2, 0, 3, INF, INF},
+        {INF, INF, 3, 0, 2, 3},
+        {INF, INF, INF, 2, 0, 2},
+        {INF, INF, INF, 3, 2, 0}
+    };
+
+    int start = 0; // starting vertex
